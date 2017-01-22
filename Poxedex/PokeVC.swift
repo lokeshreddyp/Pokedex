@@ -55,7 +55,7 @@ class PokeVC: UIViewController,UICollectionViewDelegate,UICollectionViewDelegate
         do {
             let csv = try CSV(contentsOfURL: path)
             let rows  = csv.rows
-            print(rows)
+          //  print(rows)
             
             for row in rows {
                 let pokeid  = Int(row["id"]!)
@@ -96,6 +96,19 @@ class PokeVC: UIViewController,UICollectionViewDelegate,UICollectionViewDelegate
         }
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        
+        var pokemon_seguedetails : Pokemon!
+        
+        if inSearchmode {
+            pokemon_seguedetails = filteredpokemon[indexPath.row]
+            
+        }
+        else {
+            pokemon_seguedetails = pokemons[indexPath.row]
+        }
+        
+performSegue(withIdentifier: "PokemonDetailVC", sender: pokemon_seguedetails)
         
     }
 
@@ -144,5 +157,17 @@ class PokeVC: UIViewController,UICollectionViewDelegate,UICollectionViewDelegate
             
         }
     }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if  segue.identifier ==  "PokemonDetailVC" {
+            if let detailsvc = segue.destination as? PokemonDetailVC {
+                if let pok = sender as? Pokemon {
+                    detailsvc.pokemon_detailVC = pok
+                }
+            }
+        }
+    }
+    
 }
 
